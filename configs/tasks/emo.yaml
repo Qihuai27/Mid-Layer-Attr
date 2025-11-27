@@ -1,0 +1,18 @@
+name: emo
+description: "Emotion - 4-class emotion classification in dialogues"
+
+dataset:
+  path: "emotion"
+  text_field: "text"
+  label_field: "label"
+
+labels:
+  0: " Others"
+  1: " Happy"
+  2: " Sad"
+  3: " Angry"
+
+prompt_template: "Dialogue: {text}\nEmotion:{label}"
+
+anchor_pattern:
+  prefix: ["Emotion", ":"]

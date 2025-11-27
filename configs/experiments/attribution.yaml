@@ -1,0 +1,21 @@
+name: attribution
+description: "Attention attribution analysis for anchor words"
+
+defaults:
+  model_name: "gpt2-xl"
+  batch_size: 1
+  sample_size: 100
+  demonstration_shot: 1
+  seeds: [42, 43, 44]
+
+statistics:
+  - name: "S_wp"
+    description: "Anchor word as output: attention from anchor positions to all previous tokens"
+  - name: "S_pq"
+    description: "Final position to anchor: attention from final position to anchor positions"
+  - name: "S_ww"
+    description: "Other positions: attention between non-anchor, non-final positions"
+
+output:
+  save_dir: "results/attribution"
+  save_format: "pickle"

@@ -1,0 +1,20 @@
+name: trec
+description: "TREC - 6-class question type classification"
+
+dataset:
+  path: "trec"
+  text_field: "text"
+  label_field: "coarse_label"
+
+labels:
+  0: " Abbreviation"
+  1: " Entity"
+  2: " Description"
+  3: " Person"
+  4: " Location"
+  5: " Number"
+
+prompt_template: "Question: {text}\nAnswer Type:{label}"
+
+anchor_pattern:
+  prefix: [" Type", ":"]

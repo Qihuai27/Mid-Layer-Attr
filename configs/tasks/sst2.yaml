@@ -1,0 +1,16 @@
+name: sst2
+description: "Stanford Sentiment Treebank - Binary sentiment classification"
+
+dataset:
+  path: "sst2"
+  text_field: "sentence"
+  label_field: "label"
+
+labels:
+  0: " Negative"
+  1: " Positive"
+
+prompt_template: "Review: {text}\nSentiment:{label}"
+
+anchor_pattern:
+  prefix: ["Sentiment", ":"]

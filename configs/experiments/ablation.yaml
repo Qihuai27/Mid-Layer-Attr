@@ -1,0 +1,28 @@
+name: ablation
+description: "Causal ablation experiments for anchor word effects"
+
+defaults:
+  model_name: "gpt2-xl"
+  batch_size: 1
+  sample_size: 100
+  demonstration_shot: 1
+  seeds: [42, 43, 44]
+
+interventions:
+  shallow_layer:
+    description: "Mask attention in shallow layers"
+    mask_layers: [0, 1, 2, 3, 4]
+    mask_position: "first"  # first or last
+
+  deep_layer:
+    description: "Mask attention in deep layers"
+    mask_layers: [19, 20, 21, 22, 23]  # for gpt2-xl (24 layers)
+    mask_position: "last"
+
+  non_anchor:
+    description: "Mask non-anchor words as control experiment"
+    num_random_words: "same_as_anchor"
+
+output:
+  save_dir: "results/ablation"
+  save_format: "pickle"

@@ -1,0 +1,18 @@
+name: agnews
+description: "AG News - 4-class news topic classification"
+
+dataset:
+  path: "ag_news"
+  text_field: "text"
+  label_field: "label"
+
+labels:
+  0: " World"
+  1: " Sports"
+  2: " Business"
+  3: " Technology"
+
+prompt_template: "Article: {text}\nAnswer:{label}"
+
+anchor_pattern:
+  prefix: ["Answer", ":"]
