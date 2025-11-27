@@ -49,11 +49,9 @@ logs/
 *.pth
 *.safetensors
 
-# Data
-data/
-*.csv
-*.json
-!configs/**/*.json
+.claude
+
+CLAUDE.md
 
 # OS
 .DS_Store
