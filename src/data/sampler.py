@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 from datasets import Dataset
 
-from ..anchors.definitions import TaskConfig
+from ..cluster.definitions import TaskConfig
 
 
 class DemonstrationSampler:

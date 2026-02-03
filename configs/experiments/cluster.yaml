@@ -1,0 +1,36 @@
+name: cluster
+description: "Information aggregation (cluster) analysis for studying label word effects in ICL"
+
+defaults:
+  model_name: "gpt2-xl"
+  batch_size: 1
+  sample_size: 100
+  demonstration_shot: 1
+  seeds: [42, 43, 44]
+  flow_metric: "gradient_saliency"
+
+statistics:
+  - name: "S_a"
+    description: "Aggregation: information flow from previous tokens TO cluster positions"
+  - name: "S_o"
+    description: "Output: information flow from cluster positions TO final position"
+  - name: "S_w"
+    description: "Within: information flow between other (non-cluster, non-final) positions"
+
+flow_metrics:
+  - name: "attention_sum"
+    description: "Direct attention weights summed across heads"
+    requires_gradient: false
+  - name: "gradient_saliency"
+    description: "|A ⊙ ∂L/∂A| (Gradient × Input)"
+    requires_gradient: true
+  - name: "attention_rollout"
+    description: "Cumulative attention across layers"
+    requires_gradient: false
+  - name: "attention_value_weighted"
+    description: "Attention × value vector norm"
+    requires_gradient: false
+
+output:
+  save_dir: "results/cluster"
+  save_format: "pickle"

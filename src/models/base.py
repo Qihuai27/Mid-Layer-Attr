@@ -2,6 +2,7 @@
 Base model wrapper for language models.
 """
 
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 
 import torch
@@ -13,26 +14,50 @@ from transformers import (
     PreTrainedTokenizer,
 )
 
+# Project root for finding local models
+_PROJECT_ROOT = Path(__file__).parent.parent.parent
+
 
 def load_model_and_tokenizer(
     model_name: str,
     device: str = "cuda:0",
-    torch_dtype: torch.dtype = torch.float16,
+    torch_dtype: Optional[torch.dtype] = None,
     local_path: Optional[str] = None,
+    max_length: Optional[int] = None,
 ) -> Tuple[PreTrainedModel, PreTrainedTokenizer]:
     """
     Load a causal language model and its tokenizer.
 
     Args:
         model_name: Model identifier (e.g., 'gpt2-xl', 'EleutherAI/gpt-j-6b')
+                   If a local model directory exists in model/{model_name}, it will be used.
         device: Device to load the model on
         torch_dtype: Data type for model weights
         local_path: Optional local path to load from
+        max_length: Optional max sequence length (useful for models with very large default)
 
     Returns:
         Tuple of (model, tokenizer)
     """
-    model_path = local_path or model_name
+    # Check if model exists in local model/ directory
+    if local_path:
+        model_path = local_path
+    else:
+        local_model_dir = _PROJECT_ROOT / "model" / model_name
+        if local_model_dir.exists():
+            model_path = str(local_model_dir)
+            print(f"Loading model from local path: {model_path}")
+        else:
+            model_path = model_name
+
+    # Auto-select dtype based on model
+    # phi-2 has numerical stability issues with float16, needs float32
+    if torch_dtype is None:
+        model_name_lower = model_name.lower() if isinstance(model_name, str) else ""
+        if "phi" in model_name_lower or "phi" in model_path.lower():
+            torch_dtype = torch.float32  # phi-2 needs float32 for numerical stability
+        else:
+            torch_dtype = torch.float16  # Default to float16 for other models
 
     tokenizer = AutoTokenizer.from_pretrained(model_path)
 
@@ -41,10 +66,17 @@ def load_model_and_tokenizer(
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.pad_token_id = tokenizer.eos_token_id
 
+    # Set reasonable max_length for models with very large defaults
+    if max_length is not None:
+        tokenizer.model_max_length = max_length
+    elif tokenizer.model_max_length > 512:
+        tokenizer.model_max_length = 256  # Reasonable default for ICL tasks
+
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
         torch_dtype=torch_dtype,
         device_map=device if "cuda" in device else None,
+        attn_implementation="eager",  # Required for output_attentions with custom hooks
     )
 
     if "cuda" not in device:
@@ -63,7 +95,7 @@ def get_model_num_layers(model: PreTrainedModel, model_name: str) -> int:
         return len(model.transformer.h)
     elif "gpt-j" in model_name_lower or "gptj" in model_name_lower:
         return len(model.transformer.h)
-    elif "llama" in model_name_lower:
+    elif "llama" in model_name_lower or "qwen" in model_name_lower:
         return len(model.model.layers)
     else:
         # Try common patterns

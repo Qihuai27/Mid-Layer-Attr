@@ -6,7 +6,7 @@ from typing import Dict, Optional, Tuple
 
 from datasets import Dataset, DatasetDict, load_dataset as hf_load_dataset
 
-from ..anchors.definitions import TaskConfig
+from ..cluster.definitions import TaskConfig
 
 
 def load_dataset(

@@ -1,8 +1,12 @@
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# C extensions
 *.so
+
+# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -20,11 +24,43 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual environments
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Environments
+.env
+.venv
+env/
 venv/
 ENV/
-env/
-.venv/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
 
 # IDE
 .idea/
@@ -33,29 +69,19 @@ env/
 *.swo
 *~
 
-# Jupyter
-.ipynb_checkpoints/
-
-# Results and outputs
+# Project specific
+model/
 results/
-outputs/
-logs/
 *.pkl
-*.pickle
-
-# Model weights
-*.bin
 *.pt
 *.pth
+*.bin
 *.safetensors
 
-.claude
-
-CLAUDE.md
+# Logs
+*.log
+logs/
 
 # OS
 .DS_Store
 Thumbs.db
-
-# Batch scripts (generated)
-scripts/batch/

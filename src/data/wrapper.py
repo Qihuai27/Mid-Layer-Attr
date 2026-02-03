@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 from datasets import Dataset
 from transformers import PreTrainedTokenizer
 
-from ..anchors.definitions import TaskConfig
+from ..cluster.definitions import TaskConfig
 
 
 class ICLWrapper:
